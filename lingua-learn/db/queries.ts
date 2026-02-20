@@ -1,14 +1,119 @@
-import { createClient } from '@/lib/supabase/server';
-export interface Lesson { id: string; title: string; course_id: string; unit_order: number; lesson_order: number; created_at: string; exercises?: Exercise[]; }
-export interface Exercise { id: string; lesson_id: string; type: 'SELECT' | 'ASSIST' | 'TRANSLATE'; question: string; correct_answer: string; options: string[] | null; order_index: number; }
-export interface UserProgress { user_id: string; active_course_id: string; points: number; hearts: number; streak: number; last_active: string; updated_at: string; }
-export interface UserPremium { user_id: string; stripe_customer_id: string | null; stripe_subscription_id: string | null; is_premium: boolean; }
-export const getUserProgress = async (userId: string) => { const sb = createClient(); const { data, error } = await sb.from('user_progress').select('*').eq('user_id', userId).single(); if (error && error.code !== 'PGRST116') throw error; return data as UserProgress | null; };
-export const getLessonById = async (lessonId: string) => { const sb = createClient(); const { data, error } = await sb.from('lessons').select('*,exercises(*)').eq('id', lessonId).order('order_index', { foreignTable: 'exercises', ascending: true }).single(); if (error) throw error; return data as Lesson; };
-export const getAllLessons = async () => { const sb = createClient(); const { data, error } = await sb.from('lessons').select('*').order('unit_order', { ascending: true }).order('lesson_order', { ascending: true }); if (error) throw error; return data as Lesson[]; };
-export const updateUserProgress = async (userId: string, data: Partial<UserProgress>) => { const sb = createClient(); const { data: d, error } = await sb.from('user_progress').upsert({ user_id: userId, ...data }).select().single(); if (error) throw error; return d as UserProgress; };
-export const decrementHeart = async (userId: string) => { const sb = createClient(); const { data: p } = await sb.from('user_progress').select('hearts').eq('user_id', userId).single(); if (!p || p.hearts === 0) return null; const { data, error } = await sb.from('user_progress').update({ hearts: Math.max(0, p.hearts - 1) }).eq('user_id', userId).select().single(); if (error) throw error; return data; };
-export const resetHearts = async (userId: string) => { const sb = createClient(); const { data, error } = await sb.from('user_progress').update({ hearts: 5 }).eq('user_id', userId).select().single(); if (error) throw error; return data; };
-export const getUserPremiumStatus = async (userId: string) => { const sb = createClient(); const { data, error } = await sb.from('user_premium').select('is_premium').eq('user_id', userId).single(); if (error && error.code !== 'PGRST116') return false; return !!data?.is_premium; };
-export const upsertUserPremium = async (userId: string, stripeCustomerId: string, stripeSubscriptionId: string, isPremium: boolean = true) => { const sb = createClient(); const { data, error } = await sb.from('user_premium').upsert({ user_id: userId, stripe_customer_id: stripeCustomerId, stripe_subscription_id: stripeSubscriptionId, is_premium: isPremium }).select().single(); if (error) throw error; return data as UserPremium; };
-export const getOrCreateUserProgress = async (userId: string) => { const sb = createClient(); const { data: ex } = await sb.from('user_progress').select('*').eq('user_id', userId).single(); if (ex) return ex as UserProgress; const { data: cr, error } = await sb.from('user_progress').insert({ user_id: userId, active_course_id: 'es', points: 0, hearts: 5, streak: 0 }).select().single(); if (error) throw error; return cr as UserProgress; };
+export interface Lesson {
+  id: string;
+  title: string;
+  unitId: string;
+  order: number;
+}
+
+export interface Exercise {
+  id: string;
+  lessonId: string;
+  type: "SELECT" | "ASSIST";
+  question: string;
+  order: number;
+}
+
+export interface UserProgress {
+  userId: string;
+  userName: string;
+  userImageSrc: string;
+  activeCourseId: string;
+  hearts: number;
+  points: number;
+}
+
+export interface UserPremium {
+  userId: string;
+  stripeCustomerId: string;
+  stripeSubscriptionId: string;
+  stripePriceId: string;
+  stripeCurrentPeriodEnd: Date;
+}
+
+import { createClient } from "@/lib/supabase/server";
+
+export const getUserProgress = async () => {
+  const supabase = createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) return null;
+
+  const { data, error } = await supabase
+    .from("user_progress")
+    .select("*")
+    .eq("userId", user.id)
+    .single();
+
+  if (error && error.code !== "PGRST116") throw error;
+  return data as UserProgress | null;
+};
+
+export const getLessonById = async (lessonId: string) => {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from("lessons")
+    .select("*, exercises(*, challenges(*))")
+    .eq("id", lessonId)
+    .single();
+
+  if (error) throw error;
+  return data;
+};
+
+export const getAllLessons = async () => {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from("lessons")
+    .select("*")
+    .order("order", { ascending: true });
+
+  if (error) throw error;
+  return data as Lesson[];
+};
+
+export const getUserPremiumStatus = async () => {
+  const supabase = createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) return false;
+
+  const { data, error } = await supabase
+    .from("user_premium")
+    .select("*")
+    .eq("userId", user.id)
+    .single();
+
+  if (error || !data) return false;
+
+  const isActive = data.stripePriceId && 
+    new Date(data.stripeCurrentPeriodEnd).getTime() + 86_400_000 > Date.now();
+
+  return !!isActive;
+};
+
+export const getOrCreateUserProgress = async () => {
+  const supabase = createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) return null;
+
+  const existingProgress = await getUserProgress();
+
+  if (existingProgress) return existingProgress;
+
+  const { data, error } = await supabase
+    .from("user_progress")
+    .insert({
+      userId: user.id,
+      userName: user.user_metadata.full_name || "User",
+      userImageSrc: user.user_metadata.avatar_url || "/placeholder.png",
+      activeCourseId: "en", // Default course
+      hearts: 5,
+      points: 0,
+    })
+    .select("*")
+    .single();
+
+  if (error) throw error;
+  return data as UserProgress;
+};
