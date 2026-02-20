@@ -1,7 +1,7 @@
-import Stripe from "stripe";
+import Stripe from 'stripe';
 
-export const stripe = new Stripe(process.env.STRIPE_API_KEY!, {
-  apiVersion: "2023-10-16",
+export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder', {
+  apiVersion: '2026-01-28.clover',
   typescript: true,
 });
 
@@ -26,7 +26,7 @@ export const createCheckoutSession = async ({
         quantity: 1,
       },
     ],
-    mode: "subscription",
+    mode: 'subscription',
     success_url: successUrl,
     cancel_url: cancelUrl,
     metadata: {
@@ -35,10 +35,9 @@ export const createCheckoutSession = async ({
   });
 };
 
-export const constructWebhookEvent = (payload: string, sig: string) => {
-  return stripe.webhooks.constructEvent(
+export const constructWebhookEvent = (payload: string, sig: string) =>
+  stripe.webhooks.constructEvent(
     payload,
     sig,
     process.env.STRIPE_WEBHOOK_SECRET!
   );
-};
