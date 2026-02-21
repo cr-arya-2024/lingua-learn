@@ -29,12 +29,13 @@ export async function POST(req: Request) {
     if (!metadata?.userId) {
       return new NextResponse('User id required', { status: 400 });
     }
-    await upsertUserPremium(
-      metadata.userId,
-      session.customer as string,
-      subscriptionId,
-      true
-    );
+    await upsertUserPremium({
+      user_id: metadata.userId,
+      stripe_customer_id: session.customer as string,
+      stripe_subscription_id: subscriptionId,
+      plan: 'premium',
+      status: 'active',
+    });
   }
 
   if (event.type === 'customer.subscription.deleted') {

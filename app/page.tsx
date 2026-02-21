@@ -1,5 +1,4 @@
-export const dynamic = 'force-dynamic';grep -r "FeedWrapper"ls lingua-learn/components
- lingua-learn
+export const dynamic = 'force-dynamic';
 
 import Link from 'next/link';
 import { redirect } from 'next/navigation';

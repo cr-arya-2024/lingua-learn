@@ -34,7 +34,7 @@ export const submitAnswer = async (lessonId: string) => {
 
   if (!progress) throw new Error("Progress not found");
 
-  if (premium?.is_active) return;
+  if (premium?.status === 'active') return;
 
   if (progress.hearts === 0) {
     throw new Error("hearts");

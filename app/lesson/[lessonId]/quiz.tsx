@@ -2,7 +2,7 @@
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { X, Heart, CheckCircle2, XCircle } from 'lucide-react';
-import { Exercise } from '@/db/queries';
+import { Exercise } from '@/db/types';
 import { submitAnswer, finishLesson } from '@/actions/user-progress';
 import { useExitModal } from '@/store/use-exit-modal';
 import { useHeartsModal } from '@/store/use-hearts-modal';
@@ -34,7 +34,9 @@ export const Quiz = ({ initialLessonId, initialLessonExercises, initialHearts, i
     );
   }
   const isTranslate = currentExercise.type === 'TRANSLATE';
-  const options = currentExercise.options || [];
+  const exerciseOptions = currentExercise.exercise_options || [];
+  const options = exerciseOptions.map(opt => opt.text);
+  const correctOption = exerciseOptions.find(opt => opt.correct)?.text || '';
   const getAnswer = () => isTranslate ? textAnswer : (selectedOption || '');
   const onContinue = () => {
     if (status === 'correct' || status === 'wrong') {
@@ -42,10 +44,9 @@ export const Quiz = ({ initialLessonId, initialLessonExercises, initialHearts, i
     }
     const answer = getAnswer();
     if (!answer) return;
-    const isCorrect = answer.toLowerCase().trim() === currentExercise.correct_answer.toLowerCase().trim();
+    const isCorrect = answer.toLowerCase().trim() === correctOption.toLowerCase().trim();
     startTransition(() => {
-      submitAnswer(initialLessonId, currentExercise.id, answer, isCorrect).then(res => {
-        if (res?.error === 'no_hearts') { openHearts(); return; }
+      submitAnswer(initialLessonId).then(res => {
         if (isCorrect) { setStatus('correct'); setPercentage(p => p + 100 / exercises.length); }
         else { setStatus('wrong'); if (!userSubscription) setHearts(h => Math.max(0, h - 1)); }
       });
@@ -67,7 +68,7 @@ export const Quiz = ({ initialLessonId, initialLessonExercises, initialHearts, i
           ) : (
             <div className='grid grid-cols-1 sm:grid-cols-2 gap-3'>
               {options.map(opt => (
-                <button key={opt} onClick={() => { if (status === 'none') setSelectedOption(opt); }} className={cn('p-4 border-2 rounded-xl font-bold text-left transition-all', selectedOption === opt && status === 'none' && 'border-sky-400 bg-sky-50', status === 'correct' && opt === currentExercise.correct_answer && 'border-green-500 bg-green-50', status === 'wrong' && opt === selectedOption && 'border-rose-500 bg-rose-50')}>{opt}</button>
+                <button key={opt} onClick={() => { if (status === 'none') setSelectedOption(opt); }} className={cn('p-4 border-2 rounded-xl font-bold text-left transition-all', selectedOption === opt && status === 'none' && 'border-sky-400 bg-sky-50', status === 'correct' && opt === correctOption && 'border-green-500 bg-green-50', status === 'wrong' && opt === selectedOption && 'border-rose-500 bg-rose-50')}>{opt}</button>
               ))}
             </div>
           )}
@@ -76,7 +77,7 @@ export const Quiz = ({ initialLessonId, initialLessonExercises, initialHearts, i
       <div className={cn('px-6 py-4 border-t-2 flex items-center justify-between', status === 'correct' && 'bg-green-50 border-green-200', status === 'wrong' && 'bg-rose-50 border-rose-200')}>
         <div>
           {status === 'correct' && <div className='flex items-center gap-x-2 text-green-600 font-bold text-lg'><CheckCircle2 className='h-6 w-6' /> Correct!</div>}
-          {status === 'wrong' && <div className='flex items-center gap-x-2 text-rose-600 font-bold text-lg'><XCircle className='h-6 w-6' /> Correct: {currentExercise.correct_answer}</div>}
+          {status === 'wrong' && <div className='flex items-center gap-x-2 text-rose-600 font-bold text-lg'><XCircle className='h-6 w-6' /> Correct: {correctOption}</div>}
         </div>
         <button onClick={onContinue} disabled={pending || (!getAnswer() && status === 'none')} className={cn('px-8 py-3 rounded-xl font-bold text-white transition-all', status === 'wrong' ? 'bg-rose-500 hover:bg-rose-400' : 'bg-green-500 hover:bg-green-400', (!getAnswer() && status === 'none') && 'opacity-50 cursor-not-allowed')}>
           {status === 'none' ? 'Check' : 'Continue'}
