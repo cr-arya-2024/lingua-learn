@@ -58,6 +58,15 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
+  const authRoutes = ["/login", "/signup"];
+  const isAuthRoute = authRoutes.some((route) =>
+    request.nextUrl.pathname.startsWith(route)
+  );
+
+  if (isAuthRoute && user) {
+    return NextResponse.redirect(new URL("/learn", request.url));
+  }
+
   const protectedRoutes = ["/dashboard", "/learn", "/premium", "/shop", "/lesson"];
   const isProtectedRoute = protectedRoutes.some((route) =>
     request.nextUrl.pathname.startsWith(route)

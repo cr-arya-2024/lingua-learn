@@ -1,4 +1,6 @@
-export const dynamic = 'force-dynamic';
+export const dynamic = 'force-dynamic';grep -r "FeedWrapper"ls lingua-learn/components
+ lingua-learn
+
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { Zap, Smile, Rocket } from 'lucide-react';
