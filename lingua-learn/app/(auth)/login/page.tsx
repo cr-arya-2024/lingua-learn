@@ -13,7 +13,13 @@ export default function LoginPage() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault(); setLoading(true); setError(null);
     const { error } = await sb.auth.signInWithPassword({ email, password });
-    if (error) { setError(error.message); setLoading(false); } else { router.push('/learn'); router.refresh(); }
+    if (error) { 
+      setError(error.message); 
+      setLoading(false); 
+    } else { 
+      router.push('/learn'); 
+      router.refresh(); 
+    }
   };
   const handleGoogle = async () => { await sb.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.origin + '/auth/callback' } }); };
   return (
