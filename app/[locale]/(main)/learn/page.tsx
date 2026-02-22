@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { getUserProgress } from '@/db/queries';
 import Link from 'next/link';
+import { StartNewCourseButton } from '@/components/start-new-course-button';
 
 export default async function LearnPage() {
   const supabase = createClient();
@@ -22,11 +23,11 @@ export default async function LearnPage() {
         <p className="text-slate-400 mb-8">Keep your streak going! Complete a lesson today.</p>
         
         <div className="grid gap-4">
-          <Link href="/courses" className="block p-6 bg-[#2a2a2a] rounded-2xl border border-[#3a3a3a] hover:border-green-500 transition-all group">
-            <div className="flex items-center gap-4">
+          <div className="p-6 bg-[#2a2a2a] rounded-2xl border border-[#3a3a3a]">
+            <div className="flex items-center gap-4 mb-4">
               <div className="text-4xl">🌍</div>
               <div className="flex-1">
-                <h2 className="text-xl font-bold group-hover:text-green-400 transition-colors">
+                <h2 className="text-xl font-bold text-white">
                   {userProgress?.active_course_id ? 'Continue Learning' : 'Start a New Course'}
                 </h2>
                 <p className="text-slate-400 text-sm mt-1">
@@ -35,13 +36,9 @@ export default async function LearnPage() {
                     : 'Choose a language to begin your journey'}
                 </p>
               </div>
-              <div className="text-slate-600 group-hover:text-green-500 transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-              </div>
             </div>
-          </Link>
+            <StartNewCourseButton />
+          </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="p-5 bg-[#2a2a2a] rounded-2xl border border-[#3a3a3a]">

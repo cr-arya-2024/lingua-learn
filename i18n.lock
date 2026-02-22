@@ -1,0 +1,31 @@
+{
+  "version": "1.12",
+  "timestamp": "2026-02-21T00:00:00Z",
+  "locales": {
+    "en": {
+      "filepath": "locales/en.json",
+      "keys": 30
+    },
+    "es": {
+      "filepath": "locales/es.json",
+      "keys": 30,
+      "generated": "2026-02-21"
+    },
+    "fr": {
+      "filepath": "locales/fr.json",
+      "keys": 30,
+      "generated": "2026-02-21"
+    },
+    "hi": {
+      "filepath": "locales/hi.json",
+      "keys": 30,
+      "generated": "2026-02-21"
+    }
+  },
+  "sourceLocale": "en",
+  "targetLocales": [
+    "es",
+    "fr",
+    "hi"
+  ]
+}

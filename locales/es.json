@@ -1,0 +1,52 @@
+﻿{
+  "landing": {
+    "title": "Aprende idiomas gratis, para siempre",
+    "subtitle": "Conviértete en bilingüe con Lingua Learn",
+    "cta_button": "Comenzar a aprender"
+  },
+  "lesson": {
+    "check_answer": "Verificar respuesta",
+    "correct_answer": "Correcto!",
+    "incorrect_answer": "Incorrecto",
+    "next_lesson": "Siguiente lección",
+    "practice": "Practicar"
+  },
+  "navbar": {
+    "home": "Inicio",
+    "courses": "Cursos",
+    "dashboard": "Panel",
+    "premium": "Premium",
+    "logout": "Cerrar sesión"
+  },
+  "footer": {
+    "about": "Acerca de",
+    "contact": "Contacto",
+    "privacy": "Privacidad",
+    "terms": "Términos"
+  },
+  "dashboard": {
+    "welcome": "Bienvenido",
+    "streak": "Racha",
+    "points": "Puntos",
+    "level": "Nivel"
+  },
+  "learn": {
+    "select_language": "Seleccionar idioma",
+    "spanish": "Español",
+    "french": "Francés",
+    "german": "Alemán",
+    "no_lessons": "No hay lecciones disponibles"
+  },
+  "shop": {
+    "premium_title": "Obtén Premium",
+    "premium_description": "Acceso ilimitado a todos los cursos",
+    "monthly": "Mensual",
+    "yearly": "Anual"
+  },
+  "common": {
+    "loading": "Cargando...",
+    "error": "Ocurrió un error",
+    "retry": "Reintentar",
+    "close": "Cerrar"
+  }
+}

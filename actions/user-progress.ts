@@ -67,9 +67,9 @@ export const refillHearts = async () => {
 
   const { error } = await supabase
     .from("user_progress")
-    .update({ 
+    .update({
       hearts: 5,
-      points: progress.points - 10 
+      points: progress.points - 10
     })
     .eq("user_id", user.id);
 
@@ -92,9 +92,9 @@ export const finishLesson = async (lessonId: string) => {
   // Award XP and potentially update streak
   const { error } = await supabase
     .from("user_progress")
-    .update({ 
+    .update({
       points: progress.points + 10,
-      last_active: new Date().toISOString()
+      last_active_at: new Date().toISOString()
     })
     .eq("user_id", user.id);
 

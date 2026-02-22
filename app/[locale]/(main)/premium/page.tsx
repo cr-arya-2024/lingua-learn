@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { getUserPremiumStatus } from '@/db/queries';
 import Link from 'next/link';
+import { PremiumPlanButtons, type PlanItem } from '@/components/premium-plan-buttons';
 
 const FEATURES = [
   { icon: '❤️', title: 'Unlimited Hearts', description: 'Never run out of hearts. Practice as much as you want.' },
@@ -12,35 +13,54 @@ const FEATURES = [
   { icon: '🌟', title: 'All Languages', description: 'Unlock access to all available language courses.' },
 ];
 
-const PLANS = [
-  {
-    id: 'monthly',
-    name: 'Monthly',
-    price: '$6.99',
-    period: '/month',
-    description: 'Billed monthly',
-    popular: false,
-    savings: null,
-  },
-  {
-    id: 'yearly',
-    name: 'Yearly',
-    price: '$4.17',
-    period: '/month',
-    description: 'Billed $49.99/year',
-    popular: true,
-    savings: 'Save 40%',
-  },
-  {
-    id: 'lifetime',
-    name: 'Lifetime',
-    price: '$99.99',
-    period: 'one-time',
-    description: 'Pay once, use forever',
-    popular: false,
-    savings: 'Best Deal',
-  },
-];
+// Server-only: read env to decide which plans to show. Price IDs are never sent to the client.
+function getPlans(): PlanItem[] {
+  const PRICE_MONTHLY = (process.env.PRICE_MONTHLY ?? '').trim();
+  const PRICE_YEARLY = (process.env.PRICE_YEARLY ?? '').trim();
+  const PRICE_LIFETIME = (process.env.PRICE_LIFETIME ?? '').trim();
+
+  const all: PlanItem[] = [
+    {
+      id: 'monthly',
+      name: 'Monthly',
+      price: '$6.99',
+      period: '/month',
+      description: 'Billed monthly',
+      popular: false,
+      savings: null,
+    },
+    {
+      id: 'yearly',
+      name: 'Yearly',
+      price: '$4.17',
+      period: '/month',
+      description: 'Billed $49.99/year',
+      popular: true,
+      savings: 'Save 40%',
+    },
+    {
+      id: 'lifetime',
+      name: 'Lifetime Access',
+      price: '$99.99',
+      period: 'one-time',
+      description: 'Pay once, use forever',
+      popular: false,
+      savings: 'Best Deal',
+    },
+  ];
+
+  return all.filter((p) => {
+    const id = p.id as 'monthly' | 'yearly' | 'lifetime';
+    const env =
+  // Debug (remove after confirming): server-side env check
+  if (process.env.NODE_ENV === 'development') {
+    const pk = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
+    console.log('[premium] NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY on server:', pk ? `${pk.slice(0, 12)}...` : 'NOT SET');
+  }
+      id === 'monthly' ? PRICE_MONTHLY : id === 'yearly' ? PRICE_YEARLY : PRICE_LIFETIME;
+    return env.startsWith('price_') && !env.includes('XXXXXXXX');
+  });
+}
 
 export default async function PremiumPage() {
   const supabase = createClient();
@@ -113,54 +133,17 @@ export default async function PremiumPage() {
 
         <div className="mb-8">
           <h2 className="text-xl font-bold mb-4 text-center">Choose Your Plan</h2>
-          <div className="grid gap-4">
-            {PLANS.map(plan => (
-              <div
-                key={plan.id}
-                className={`relative p-5 rounded-2xl border transition-all ${
-                  plan.popular
-                    ? 'bg-yellow-500/10 border-yellow-500/60'
-                    : 'bg-[#2a2a2a] border-[#3a3a3a]'
-                }`}
-              >
-                {plan.popular && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-yellow-500 text-black text-xs font-bold px-3 py-1 rounded-full">
-                    MOST POPULAR
-                  </div>
-                )}
-                {plan.savings && !plan.popular && (
-                  <div className="absolute -top-3 right-4 bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">
-                    {plan.savings}
-                  </div>
-                )}
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="font-bold text-white text-lg">{plan.name}</h3>
-                    <p className="text-sm text-slate-400">{plan.description}</p>
-                  </div>
-                  <div className="text-right">
-                    <div className="flex items-baseline gap-1">
-                      <span className="text-2xl font-bold text-white">{plan.price}</span>
-                      <span className="text-slate-400 text-sm">{plan.period}</span>
-                    </div>
-                  </div>
+          {(() => {
+            const plans = getPlans();
+            if (plans.length === 0) {
+              return (
+                <div className="p-4 bg-amber-500/10 border border-amber-500/30 rounded-xl text-amber-200 text-sm">
+                  No plans configured. Add PRICE_MONTHLY and PRICE_YEARLY (and optionally PRICE_LIFETIME) to .env.local.
                 </div>
-                <form action="/api/stripe/checkout" method="POST" className="mt-4">
-                  <input type="hidden" name="plan" value={plan.id} />
-                  <button
-                    type="submit"
-                    className={`w-full py-3 rounded-xl font-bold text-sm transition-all ${
-                      plan.popular
-                        ? 'bg-yellow-500 hover:bg-yellow-400 text-black'
-                        : 'bg-green-500 hover:bg-green-400 text-white'
-                    }`}
-                  >
-                    Get {plan.name} Plan
-                  </button>
-                </form>
-              </div>
-            ))}
-          </div>
+              );
+            }
+            return <PremiumPlanButtons plans={plans} />;
+          })()}
         </div>
 
         <div className="text-center">

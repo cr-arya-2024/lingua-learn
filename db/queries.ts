@@ -29,7 +29,7 @@ export const getAllLessons = async (courseId: string): Promise<Lesson[]> => {
     .from('lessons')
     .select('*')
     .eq('course_id', courseId)
-    .order('order', { ascending: true });
+    .order('lesson_order', { ascending: true });
   if (error) throw error;
   return data as Lesson[];
 };

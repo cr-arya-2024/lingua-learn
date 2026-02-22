@@ -24,11 +24,12 @@ export async function POST(req: Request) {
   const session = event.data.object as unknown as Record<string, unknown>;
 
   if (event.type === 'checkout.session.completed') {
-    const subscriptionId = (session.subscription as string);
     const metadata = session.metadata as Record<string, string> | null;
     if (!metadata?.userId) {
       return new NextResponse('User id required', { status: 400 });
     }
+    // Subscription mode has session.subscription; payment (e.g. lifetime) does not
+    const subscriptionId = (session.subscription as string | null) ?? null;
     await upsertUserPremium({
       user_id: metadata.userId,
       stripe_customer_id: session.customer as string,

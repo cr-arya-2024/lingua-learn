@@ -1,0 +1,52 @@
+{
+  "landing": {
+    "title": "Apprenez les langues gratuitement, pour toujours",
+    "subtitle": "Devenez bilingue avec Lingua Learn",
+    "cta_button": "Commencer à apprendre"
+  },
+  "lesson": {
+    "check_answer": "Vérifier la réponse",
+    "correct_answer": "Correct!",
+    "incorrect_answer": "Incorrect",
+    "next_lesson": "Leçon suivante",
+    "practice": "Pratiquer"
+  },
+  "navbar": {
+    "home": "Accueil",
+    "courses": "Cours",
+    "dashboard": "Tableau de bord",
+    "premium": "Premium",
+    "logout": "Déconnexion"
+  },
+  "footer": {
+    "about": "À propos",
+    "contact": "Contact",
+    "privacy": "Confidentialité",
+    "terms": "Conditions"
+  },
+  "dashboard": {
+    "welcome": "Bienvenue",
+    "streak": "Série",
+    "points": "Points",
+    "level": "Niveau"
+  },
+  "learn": {
+    "select_language": "Sélectionner une langue",
+    "spanish": "Espagnol",
+    "french": "Français",
+    "german": "Allemand",
+    "no_lessons": "Aucune leçon disponible"
+  },
+  "shop": {
+    "premium_title": "Obtenez Premium",
+    "premium_description": "Accès illimité à tous les cours",
+    "monthly": "Mensuel",
+    "yearly": "Annuel"
+  },
+  "common": {
+    "loading": "Chargement...",
+    "error": "Une erreur s'est produite",
+    "retry": "Réessayer",
+    "close": "Fermer"
+  }
+}

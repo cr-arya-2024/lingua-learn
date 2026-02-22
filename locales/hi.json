@@ -1,0 +1,52 @@
+{
+  "landing": {
+    "title": "भाषाएं सीखें मुफ्त में, हमेशा के लिए",
+    "subtitle": "Lingua Learn के साथ द्विभाषी बनें",
+    "cta_button": "सीखना शुरू करें"
+  },
+  "lesson": {
+    "check_answer": "उत्तर जांचें",
+    "correct_answer": "सही है!",
+    "incorrect_answer": "गलत है",
+    "next_lesson": "अगला पाठ",
+    "practice": "अभ्यास करें"
+  },
+  "navbar": {
+    "home": "होम",
+    "courses": "कोर्स",
+    "dashboard": "डैशबोर्ड",
+    "premium": "प्रीमियम",
+    "logout": "लॉगआउट"
+  },
+  "footer": {
+    "about": "परिचय",
+    "contact": "संपर्क करें",
+    "privacy": "गोपनीयता",
+    "terms": "शर्तें"
+  },
+  "dashboard": {
+    "welcome": "स्वागत है",
+    "streak": "स्ट्रीक",
+    "points": "अंक",
+    "level": "स्तर"
+  },
+  "learn": {
+    "select_language": "एक भाषा चुनें",
+    "spanish": "स्पेनिश",
+    "french": "फ्रेंच",
+    "german": "जर्मन",
+    "no_lessons": "कोई पाठ उपलब्ध नहीं है"
+  },
+  "shop": {
+    "premium_title": "प्रीमियम प्राप्त करें",
+    "premium_description": "सभी पाठ्यक्रमों के लिए असीमित पहुंच",
+    "monthly": "मासिक",
+    "yearly": "वार्षिक"
+  },
+  "common": {
+    "loading": "लोड हो रहा है...",
+    "error": "कोई त्रुटि हुई",
+    "retry": "फिर से प्रयास करें",
+    "close": "बंद करें"
+  }
+}

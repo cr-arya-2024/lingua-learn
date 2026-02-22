@@ -1,0 +1,66 @@
+{
+  "landing": {
+    "title": "Learn Languages for Free, Forever.",
+    "subtitle": "Fun, effective and personalized language learning.",
+    "cta_button": "Get Started",
+    "already_account": "I already have an account"
+  },
+  "lesson": {
+    "start_lesson": "Start lesson",
+    "check_answer": "Check answer",
+    "next": "Next",
+    "correct_answer": "Correct!",
+    "incorrect_answer": "Incorrect. Try again.",
+    "translate_sentence": "Translate this sentence",
+    "select_option": "Select the correct option",
+    "you_earned_xp": "You earned 10 XP and updated your streak."
+  },
+  "navbar": {
+    "home": "Home",
+    "courses": "Courses",
+    "profile": "Profile",
+    "settings": "Settings",
+    "logout": "Logout"
+  },
+  "footer": {
+    "about": "About",
+    "privacy": "Privacy",
+    "terms": "Terms of Service",
+    "contact": "Contact"
+  },
+  "dashboard": {
+    "welcome_back": "Welcome Back",
+    "continue_learning": "Continue Your Learning Journey",
+    "daily_streak": "Daily Streak",
+    "total_xp": "Total XP",
+    "start_lesson_cta": "Start Lesson",
+    "leaderboard": "Leaderboard",
+    "quests": "Quests",
+    "shop": "Shop",
+    "premium": "Premium"
+  },
+  "learn": {
+    "your_practice": "Your Daily Practice",
+    "keep_streak": "Keep your streak going! Complete a lesson today.",
+    "continue": "Continue Learning",
+    "start_new": "Start a New Course",
+    "pick_where_left": "Pick up where you left off",
+    "choose_language": "Choose a language to begin your journey",
+    "day_streak": "Day Streak",
+    "total_xp": "Total XP"
+  },
+  "shop": {
+    "hearts": "Hearts",
+    "restore_hearts": "Restore your hearts to continue learning",
+    "streak_freeze": "Streak Freeze",
+    "protect_streak": "Protect your streak for one day when you miss practice"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "try_again": "Try again",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete"
+  }
+}
